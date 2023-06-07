@@ -1,0 +1,9 @@
+@import '@/styles/variables/index.scss';
+@import '@/styles/mixins/index.scss';
+
+.ant-typography.nd-text {
+    font-size: 14px;
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 600;
+}

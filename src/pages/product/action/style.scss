@@ -1,0 +1,26 @@
+@import '@/styles/variables/index.scss';
+@import '@/styles/mixins/index.scss';
+
+.product-action {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .form-container {
+        max-width: 1150px;
+
+        .form-dynamic {
+            display: flex;
+            flex-direction: column;
+
+            span.ant-typography.nd-text {
+                padding-bottom: 8px;
+            }
+        }
+
+        .delete-icon {
+            font-size: 20px;
+            margin-top: 5px;
+        }
+    }
+}

@@ -1,0 +1,19 @@
+@import '@/styles/variables/index.scss';
+
+@mixin mobile {
+  @media (max-width: #{$breakpoint-sm-device}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: #{$breakpoint-sm-device + 1}) and (max-width: #{$breakpoint-md-device}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$breakpoint-md-device + 1}) {
+    @content;
+  }
+}

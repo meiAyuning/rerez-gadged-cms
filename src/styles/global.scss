@@ -1,0 +1,150 @@
+@import '@/styles/variables/index.scss';
+@import '@/styles/mixins/index.scss';
+@import '@/styles/utils/index.scss';
+
+:root {
+  // font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Poppins';
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #ffffff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 8px;
+}
+
+.is-hidden-mobile {
+  @include mobile {
+    display: none;
+  }
+}
+
+/* Large mobile devices */
+@media only screen and (min-width: $breakpoint-sm-device) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* Large mobile devices */
+@media only screen and (min-width: $breakpoint-md-device) {
+  html {
+    font-size: 24px;
+  }
+}
+
+/* Large mobile devices */
+@media only screen and (min-width: $breakpoint-lg-device) {
+  html {
+    font-size: 28px;
+  }
+}
+
+/* Large mobile devices */
+@media only screen and (min-width: $breakpoint-xl-device) {
+  html {
+    font-size: 30px;
+  }
+}
+
+/* Large mobile devices */
+@media only screen and (min-width: $breakpoint-xxl-device) {
+  html {
+    font-size: 32px;
+  }
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+// a:hover {
+//   color: #535bf2;
+// }
+
+body {
+  margin: 0;
+  display: flex;
+  position: relative;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+
+  a:hover {
+    color: #747bff;
+  }
+
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+.ant-form .ant-form-item .ant-form-item-label {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+}
+
+.ant-form .ant-form-item {
+  @include mobile {
+    margin-bottom: $pd-spacing-2xl;
+  }
+}
+
+// .ant-form-item-with-help .ant-form-item-explain {
+//   margin-bottom: 2rem;
+// }
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition: background-color 600000s 0s, color 600000s 0s;
+}

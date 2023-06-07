@@ -1,0 +1,20 @@
+@import '@/styles/variables/index.scss';
+@import '@/styles/mixins/index.scss';
+
+.layout {
+    width: 100vw;
+    min-height: 100vh;
+
+    &-header {
+        background-color: $primary-color;
+    }
+
+    &-sider.ant-layout-sider {
+        background: $secondary-color;
+    }
+
+    &-content {
+        background: $bg-gray;
+        padding: 20px;
+    }
+}

@@ -1,0 +1,17 @@
+@import '@/styles/mixins/index.scss';
+
+.display-mobile {
+  @include tablet {
+    display: none !important;
+  }
+
+  @include desktop {
+    display: none !important;
+  }
+}
+
+.hidden-mobile {
+  @include mobile {
+    display: none !important;
+  }
+}

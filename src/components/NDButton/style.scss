@@ -1,0 +1,33 @@
+@import '@/styles/variables/index.scss';
+@import '@/styles/mixins/index.scss';
+
+button.ant-btn[type=button],
+button.ant-btn[type=submit] {
+    border: none;
+    color: white;
+
+    &:hover {
+        color: white;
+    }
+
+    &:focus,
+    &:focus-visible {
+        outline: none;
+    }
+
+    background-color: rgb(15, 15, 196);
+
+    &.ant-btn-primary,
+    & {
+        background-color: $secondary-color;
+
+        &:active,
+        &:hover {
+            background-color: $secondary-color;
+        }
+
+        &.ant-btn-dangerous {
+            background-color: rgb(237, 66, 66);
+        }
+    }
+}
