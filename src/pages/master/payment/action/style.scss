@@ -1,0 +1,12 @@
+@import '@/styles/variables/index.scss';
+@import '@/styles/mixins/index.scss';
+
+.payment-action {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .form-container {
+        max-width: 400px;
+    }
+}

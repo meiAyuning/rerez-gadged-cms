@@ -1,0 +1,24 @@
+@import '@/styles/variables/index.scss';
+@import '@/styles/mixins/index.scss';
+
+.login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: $bg-gray;
+
+    .form-wrapper {
+        color: white;
+        border-radius: 8px;
+        width: 350px;
+        border: 4px solid $secondary-color;
+        padding: 20px;
+        text-align: center;
+
+        .secondary {
+            width: 100%;
+        }
+    }
+}

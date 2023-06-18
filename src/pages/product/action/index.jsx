@@ -1,60 +1,41 @@
+import BrandAPI from "@/api/brand";
+import NDButton from "@/components/NDButton";
+import NDText from "@/components/NDText";
+import NDTextEditor from "@/components/NDTextEditor";
 import NDTitle from "@/components/NDTitle";
+import { getDataUriFromFile } from "@/utils";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import {
-  Button,
   Col,
   ColorPicker,
   Divider,
   Form,
   Input,
+  InputNumber,
   Row,
   Select,
-  Space,
-  Typography,
   Upload,
+  message,
 } from "antd";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import "./style.scss";
-import {
-  DeleteOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
-import NDButton from "@/components/NDButton";
-import NDText from "@/components/NDText";
+import ProductAPI from "@/api/product";
+import ImgCrop from "antd-img-crop";
 
 export default function ProductAction() {
   const [form] = Form.useForm();
   const [stringHex, setStringHex] = useState([]);
-  const [fileList, setFileList] = useState([
-    {
-      uid: "-1",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: "-2",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: "-xxx",
-      percent: 50,
-      name: "image.png",
-      status: "uploading",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: "-5",
-      name: "image.png",
-      status: "error",
-    },
-  ]);
+  const [fileList, setFileList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const params = useParams();
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const [brands, setBrands] = useState([]);
 
   const colorChange = (name, hex) => {
     const colors = form.getFieldValue("colors") || [];
-    colors[name].color_code = hex;
+    colors[name].code = hex;
     stringHex[name] = hex;
     setStringHex([...stringHex]);
     form.setFieldValue("colors", colors);
@@ -62,7 +43,7 @@ export default function ProductAction() {
 
   const addColor = () => {
     const colors = form.getFieldValue("colors") || [];
-    colors.push({ color_name: "", color_code: "#1677FF" });
+    colors.push({ name: "", code: "#1677FF" });
     setStringHex([...stringHex, "#1677FF"]);
     form.setFieldValue("colors", colors);
   };
@@ -80,35 +61,126 @@ export default function ProductAction() {
     form.setFieldValue("colors", colors);
   };
 
+  const handleUploadImage = (options) => {
+    getDataUriFromFile(options.file)
+      .then(({ dataUri, fileName }) => {
+        setFileList([...fileList, { fileName, url: dataUri }]);
+      })
+      .catch((error) => message.error(error.message));
+  };
+
+  const handleRemoveUpdloadImage = (file) => {
+    const filterArr = fileList.filter(
+      (item) => item.fileName !== file.fileName
+    );
+    setFileList(filterArr);
+  };
+
+  const handleFinish = async (values) => {
+    setLoading(true);
+    try {
+      const { colors } = values;
+      if (fileList.length === 0) {
+        message.error("upload foto produk");
+        return;
+      }
+
+      const imageList = fileList.map((file) => file.url);
+      const payload = { ...values, image: imageList, color: colors };
+      // console.log(payload);
+
+      params.action === "create"
+        ? await ProductAPI.createProduct(payload)
+        : await ProductAPI.updateProduct(payload, params.id);
+
+      setLoading(false);
+      message.success(`${params.action} product success`);
+      navigate("/product");
+    } catch (error) {
+      message.error(error.message);
+      setLoading(false);
+    }
+  };
+
+  const fetchBrand = async () => {
+    try {
+      const { data: resBrand } = await BrandAPI.getBrand();
+      setBrands(resBrand.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const setInitForm = () => {
+    const initColors = state.color.map((item) => ({
+      name: item.name,
+      code: item.code,
+    }));
+
+    const initVariants = state.variant.map((item) => ({
+      name: item.name,
+      price: item.price,
+      stock: item.stock,
+    }));
+    setStringHex(state.color.map((item) => item.code));
+
+    form.setFieldsValue({
+      ...state,
+      colors: initColors,
+      brand: state.brand.id,
+      variant: initVariants,
+    });
+
+    setFileList(state.image);
+  };
+
+  useEffect(() => {
+    if (params.action === "update") {
+      setInitForm();
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchBrand();
+  }, []);
+
   return (
     <div className="product-action">
       <NDTitle type="Page" level={1}>
-        Tambah Produk
+        {params.action === "create" ? "Tambah" : "Ubah"} Produk
       </NDTitle>
       <div className="form-container">
         <Form
           requiredMark={false}
           layout="vertical"
           form={form}
-          onFinish={(values) => console.log(values.colors)}
+          onFinish={handleFinish}
         >
-          <Row gutter={20}>
-            <Col span={12}>
-              <Form.Item label="Foto Produk">
-                <Upload fileList={fileList} listType="picture-card">
-                  {fileList.length >= 5 ? null : (
-                    <div>
-                      <PlusOutlined />
-                      <div
-                        style={{
-                          marginTop: 8,
-                        }}
-                      >
-                        Upload
+          <Row className="wrapper-form-input" gutter={20}>
+            <Col span={24}>
+              <Form.Item name="images" label="Foto Produk">
+                <ImgCrop rotationSlider={true} showReset={true}>
+                  <Upload
+                    customRequest={handleUploadImage}
+                    onRemove={handleRemoveUpdloadImage}
+                    fileList={fileList}
+                    listType="picture-card"
+                    accept=".jpg,.jpeg,.png,.webp"
+                  >
+                    {fileList.length >= 5 ? null : (
+                      <div>
+                        <PlusOutlined />
+                        <div
+                          style={{
+                            marginTop: 8,
+                          }}
+                        >
+                          Upload
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </Upload>
+                    )}
+                  </Upload>
+                </ImgCrop>
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -134,17 +206,18 @@ export default function ProductAction() {
                   },
                 ]}
               >
-                <Select options={[{ value: "1", label: "Samsung" }]} />
+                <Select
+                  fieldNames={{ label: "name", value: "id" }}
+                  options={brands}
+                />
               </Form.Item>
-            </Col>
-            <Col span={12} className="form-dynamic">
+
               <NDText>Varian</NDText>
               <Form.List
                 name="variant"
                 rules={[
                   {
                     validator: async (_, variant) => {
-                      console.log(variant);
                       if (!variant || variant.length === 0) {
                         return Promise.reject(
                           new Error("Masukan minimal 1 varian")
@@ -163,7 +236,7 @@ export default function ProductAction() {
                             <Col span={24}>
                               <Form.Item
                                 {...restField}
-                                name={[name, "variant_name"]}
+                                name={[name, "name"]}
                                 rules={[
                                   {
                                     required: true,
@@ -177,7 +250,7 @@ export default function ProductAction() {
                             <Col span={12}>
                               <Form.Item
                                 {...restField}
-                                name={[name, "variant_price"]}
+                                name={[name, "price"]}
                                 rules={[
                                   {
                                     required: true,
@@ -185,13 +258,16 @@ export default function ProductAction() {
                                   },
                                 ]}
                               >
-                                <Input placeholder="Harga" />
+                                <InputNumber
+                                  placeholder="Harga"
+                                  addonBefore="Rp."
+                                />
                               </Form.Item>
                             </Col>
                             <Col span={12}>
                               <Form.Item
                                 {...restField}
-                                name={[name, "variant_stock"]}
+                                name={[name, "stock"]}
                                 rules={[
                                   {
                                     required: true,
@@ -199,7 +275,10 @@ export default function ProductAction() {
                                   },
                                 ]}
                               >
-                                <Input placeholder="Stok" />
+                                <InputNumber
+                                  placeholder="Stok"
+                                  addonAfter="pcs"
+                                />
                               </Form.Item>
                             </Col>
                             <Divider style={{ margin: 10 }} />
@@ -229,15 +308,13 @@ export default function ProductAction() {
                   </>
                 )}
               </Form.List>
-            </Col>
-            <Col span={12} className="form-dynamic">
+
               <NDText>Warna</NDText>
               <Form.List
                 name="colors"
                 rules={[
                   {
                     validator: async (_, colors) => {
-                      console.log(_);
                       if (!colors || colors.length === 0) {
                         return Promise.reject(
                           new Error("Masukan minimal 1 warna")
@@ -254,7 +331,7 @@ export default function ProductAction() {
                         <Col span={12}>
                           <Form.Item
                             {...restField}
-                            name={[name, "color_name"]}
+                            name={[name, "name"]}
                             rules={[
                               {
                                 required: true,
@@ -268,7 +345,7 @@ export default function ProductAction() {
                         <Col span={12}>
                           <Form.Item
                             {...restField}
-                            name={[name, "color_code"]}
+                            name={[name, "code"]}
                             rules={[
                               {
                                 required: true,
@@ -316,10 +393,28 @@ export default function ProductAction() {
               </Form.List>
             </Col>
 
+            <Col span={12}>
+              <Form.Item
+                name="description"
+                label="Deskripsi"
+                rules={[
+                  {
+                    required: true,
+                    message: "Masukan deskripsi produk",
+                  },
+                ]}
+              >
+                <NDTextEditor />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row justify={"end"}>
             <Col>
-              <NDButton htmlType="submit" type="primary">
-                Simpan
-              </NDButton>
+              <Form.Item>
+                <NDButton htmlType="submit" loading={loading} type="primary">
+                  {params.action === "create" ? "Tambah" : "Ubah"} Produk
+                </NDButton>
+              </Form.Item>
             </Col>
           </Row>
         </Form>

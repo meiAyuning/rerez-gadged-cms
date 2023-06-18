@@ -15,8 +15,6 @@ button.ant-btn[type=submit] {
         outline: none;
     }
 
-    background-color: rgb(15, 15, 196);
-
     &.ant-btn-primary,
     & {
         background-color: $secondary-color;

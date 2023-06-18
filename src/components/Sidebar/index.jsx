@@ -24,7 +24,12 @@ function getItem(label, key, icon, children, type) {
 
 const items = [
   getItem("Dashboard", "/dashboard", <DashboardOutlined />),
-  getItem("Konten", "/content", <PictureOutlined />),
+  getItem("Konten", "/content", <PictureOutlined />, [
+    getItem("Banner", "/content/banner"),
+    getItem("Promo", "/content/promo"),
+    getItem("Feature", "/content/feature"),
+    getItem("Footer", "/content/footer"),
+  ]),
   getItem("Produk", "/product", <InboxOutlined />),
   getItem("Pesanan", "/order", <ShoppingOutlined />),
   getItem("Master", "Sub1", <DatabaseOutlined />, [

@@ -1,0 +1,9 @@
+@import '@/styles/variables/index.scss';
+@import '@/styles/mixins/index.scss';
+
+.footer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}

@@ -1,0 +1,51 @@
+@import '@/styles/variables/index.scss';
+@import '@/styles/mixins/index.scss';
+
+.quill {
+    .ql-toolbar {
+        background-color: $secondary-color;
+        border-radius: 8px 8px 0 0;
+        border-bottom: none;
+
+        .ql-stroke {
+            fill: none;
+            stroke: #fff;
+        }
+
+        .ql-fill {
+            fill: #fff;
+            stroke: none;
+        }
+
+        .ql-picker {
+            color: #fff;
+        }
+
+        .ql-picker-options {
+            background-color: $bg-gray;
+            color: $primary-color;
+        }
+
+
+        button:hover .ql-stroke,
+        .ql-picker-label:hover .ql-stroke {
+            fill: none;
+            stroke: white !important;
+        }
+
+        .ql-picker-label:hover {
+            color: white !important;
+        }
+
+        button:hover .ql-fill,
+        .ql-picker-label:hover .ql-fill {
+            fill: white !important;
+            stroke: none;
+        }
+    }
+
+    .ql-container {
+        background-color: white;
+        border-radius: 0 0 8px 8px;
+    }
+}

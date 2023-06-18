@@ -1,58 +1,46 @@
+import "./style.scss";
+import { ProductColumns } from "./productColumns";
+import { Space, Table, message } from "antd";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import NDButton from "@/components/NDButton";
 import NDTitle from "@/components/NDTitle";
-import { Space, Table } from "antd";
-import { productColumns } from "./productColumns";
-import "./style.scss";
-import { useNavigate } from "react-router-dom";
-
-const data = [
-  {
-    id: "64787fc70b15a441f085a58f",
-    brand: {
-      id: "647809d1353385e4aeb9aff9",
-      name: "Samsung",
-    },
-    color: ["#FFC26F", "#C38154", "#884A39"],
-    description: "ggggg",
-    image: [
-      {
-        id: "64787fc90b15a441f085a592",
-        name: "rerez-gadget/nu0widpc5dt0uzyn2xgs",
-        url: "http://res.cloudinary.com/dhbi7k7bq/image/upload/v1685618625/rerez-gadget/nu0widpc5dt0uzyn2xgs.webp",
-        productId: "64787fc70b15a441f085a58f",
-      },
-      {
-        id: "64787fc90b15a441f085a593",
-        name: "rerez-gadget/jxx7rycewumtrwdojwx8",
-        url: "http://res.cloudinary.com/dhbi7k7bq/image/upload/v1685618628/rerez-gadget/jxx7rycewumtrwdojwx8.webp",
-        productId: "64787fc70b15a441f085a58f",
-      },
-    ],
-    name: "Samsung S23",
-    variant: [
-      {
-        id: "64787fc70b15a441f085a590",
-        name: "500 Gb",
-        price: 23000000,
-        stock: 300,
-        productId: "64787fc70b15a441f085a58f",
-      },
-      {
-        id: "64787fc70b15a441f085a591",
-        name: "1Tb",
-        price: 40000000,
-        stock: 30,
-        productId: "64787fc70b15a441f085a58f",
-      },
-    ],
-  },
-];
+import ProductAPI from "@/api/product";
 
 export default function Product() {
   const navigate = useNavigate();
+  const [products, setProducts] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const fetchData = async () => {
+    setLoading(true);
+
+    try {
+      const { data: resProduct } = await ProductAPI.getProduct();
+      setProducts(resProduct.data);
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await ProductAPI.deleteProduct(id);
+      message.success("success delete product");
+      fetchData();
+    } catch (error) {
+      console.log(error);
+      message.success("failed delete product");
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
-    <main className="product">
+    <div className="product">
       <Space direction="vertical" size="small">
         <NDTitle type="Page" level={1}>
           Produk
@@ -61,7 +49,12 @@ export default function Product() {
           Tambah Produk
         </NDButton>
       </Space>
-      <Table rowKey={"id"} dataSource={data} columns={productColumns} />
-    </main>
+      <Table
+        loading={loading}
+        rowKey={"id"}
+        dataSource={products}
+        columns={ProductColumns(handleDelete)}
+      />
+    </div>
   );
 }
