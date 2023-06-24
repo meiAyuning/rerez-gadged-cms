@@ -17,4 +17,15 @@
         background: $bg-gray;
         padding: 20px;
     }
+
+    .graph {
+        width: 500px;
+        height: 200px;
+
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+    }
 }

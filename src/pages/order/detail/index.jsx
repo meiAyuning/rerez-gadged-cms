@@ -71,14 +71,20 @@ export default function DetailOrder() {
           </Row>
         </Col>
         <Col span={12}>
-          <NDText>Bukti Pembayaran : </NDText>
-          <Image
-            width={120}
-            src={
-              data?.paymentProof ||
-              "https://dummyimage.com/400x400/6a58ba/ffffff&text=No+Payment+Proof+Yet"
-            }
-          />
+          <Row>
+            <Col span={24}>
+              <NDText>Bukti Pembayaran : </NDText>
+            </Col>
+            <Col>
+              <Image
+                width={120}
+                src={
+                  data?.paymentProof ||
+                  "https://dummyimage.com/400x400/6a58ba/ffffff&text=No+Payment+Proof+Yet"
+                }
+              />
+            </Col>
+          </Row>
         </Col>
         <Col span={24}>
           <Table

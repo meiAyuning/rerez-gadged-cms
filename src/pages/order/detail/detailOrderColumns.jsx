@@ -45,5 +45,21 @@ export function DetailOrderColumns() {
         </Tooltip>
       ),
     },
+    {
+      title: "Harga",
+      dataIndex: "price",
+      render: (_, { variant }) => formatNumber(variant.price),
+    },
+    {
+      title: "Jumlah",
+      dataIndex: "quantity",
+      render: (_, { quantity }) => quantity,
+    },
+    {
+      title: "Total",
+      dataIndex: "total",
+      render: (_, { quantity, variant }) =>
+        formatNumber(quantity * variant.price),
+    },
   ];
 }
