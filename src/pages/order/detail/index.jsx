@@ -79,7 +79,7 @@ export default function DetailOrder() {
               <Image
                 width={120}
                 src={
-                  data?.paymentProof ||
+                  data?.paymentProof?.url ||
                   "https://dummyimage.com/400x400/6a58ba/ffffff&text=No+Payment+Proof+Yet"
                 }
               />
