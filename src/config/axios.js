@@ -1,8 +1,8 @@
 import { message } from "antd";
 import axios from "axios";
 
-const baseURL = "http://localhost:3000/v1";
-// const baseURL = "https://friendly-cow-culottes.cyclic.app/v1";
+// const baseURL = "http://localhost:3000/v1";
+const baseURL = "https://friendly-cow-culottes.cyclic.app/v1";
 
 const api = axios.create({ baseURL });
 

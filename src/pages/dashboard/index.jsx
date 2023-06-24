@@ -5,29 +5,6 @@ import { months } from "@/constant/month";
 import { useState } from "react";
 import DashboardAPI from "../../api/dahsboard";
 
-// const data = [
-//   {
-//     brand: "Samsung",
-//     penjualan: 5,
-//   },
-//   {
-//     brand: "Oppo",
-//     penjualan: 0,
-//   },
-//   {
-//     brand: "Iphone",
-//     penjualan: 0,
-//   },
-//   {
-//     brand: "Vivo",
-//     penjualan: 0,
-//   },
-//   {
-//     brand: "Xiomi",
-//     penjualan: 0,
-//   },
-// ];
-
 const config = {
   xField: "brand",
 
