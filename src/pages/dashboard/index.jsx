@@ -1,40 +1,20 @@
 import NDTitle from "@/components/NDTitle";
-import { Column } from "@ant-design/charts";
 import "./style.scss";
 import { months } from "@/constant/month";
 import { useState } from "react";
 import DashboardAPI from "../../api/dahsboard";
-
-const config = {
-  xField: "brand",
-
-  yField: "penjualan",
-  label: {
-    position: "middle",
-    style: {
-      fill: "#FFFFFF",
-      opacity: 0.6,
-    },
-  },
-  xAxis: {
-    label: {
-      autoHide: true,
-      autoRotate: false,
-    },
-  },
-};
+import { QuantityChart } from "@/components/Chart";
 
 export default function Dahboard() {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
 
   const fetchData = async () => {
     setLoading(true);
 
     try {
       const { data: resGraph } = await DashboardAPI.getGraph();
-      console.log(resGraph);
-      setData(resGraph);
+      setData(resGraph.data);
     } catch (error) {
       console.log(error);
     }
@@ -51,11 +31,11 @@ export default function Dahboard() {
   return (
     <div className="dashboard">
       <NDTitle type="Page" level={1}>
-        Pesanan
+        Dashboard
       </NDTitle>
       <div className="graph">
         <div className="title">Grafik Penjualan Bulan {monthNow}</div>
-        <Column loading={loading} {...config} data={data} />
+        <QuantityChart data={data} loading={loading} />
       </div>
     </div>
   );
